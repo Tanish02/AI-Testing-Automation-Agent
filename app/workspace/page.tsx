@@ -1,5 +1,11 @@
+import WorkspaceBody from '@/components/custom/WorkspaceBody'
+
 const workspace = () => {
-  return <div>workspace</div>
+  return (
+    <div>
+      <WorkspaceBody />
+    </div>
+  )
 }
 
 export default workspace
