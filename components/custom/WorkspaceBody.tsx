@@ -29,8 +29,10 @@ const WorkspaceBody = () => {
           <Button>Add Repo</Button>
         </div>
       </Card>
-      // Show Repo list and if not so blank
-      <Card>
+
+      {/* If no repo added show empty workspace */}
+
+      <Card className="mt-10">
         <CardContent>
           <EmptyWorkspace />
         </CardContent>
