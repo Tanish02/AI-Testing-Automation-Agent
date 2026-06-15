@@ -1,13 +1,36 @@
 'use client'
 import { UserDetailContext } from '@/context/UserDetailContext'
+import axios from 'axios'
 import Image from 'next/image'
-import { useContext } from 'react'
+import { useRouter } from 'next/navigation'
+import { useContext, useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { Card, CardContent } from '../ui/card'
 import EmptyWorkspace from './EmptyWorkspace'
 
 const WorkspaceBody = () => {
+  // const cookieStore = await cookies()
+  // const token = cookieStore.get('gh_token')?.value
+
   const { userDetail } = useContext(UserDetailContext)
+  const router = useRouter()
+
+  const [token, setToken] = useState('')
+
+  useEffect(() => {
+    GetGithubUserToken()
+  }, [])
+
+  const GetGithubUserToken = async () => {
+    const result = await axios.get('/api/github/token')
+    console.log(result.data.token)
+    setToken(result.data.token)
+  }
+  // TODO: On Add Repo click -> connect to github and add repo to db
+  const OnAddRepo = async () => {
+    router.push('/api/github')
+  }
+  //===================
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -26,7 +49,11 @@ const WorkspaceBody = () => {
           <h2 className="text-lg">Connect Github & Add Repo</h2>
         </div>
         <div>
-          <Button>Add Repo</Button>
+          {!token ? (
+            <Button onClick={OnAddRepo}>Setup</Button>
+          ) : (
+            <Button>+Add Repo</Button>
+          )}
         </div>
       </Card>
 
