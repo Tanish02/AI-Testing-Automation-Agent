@@ -8,19 +8,39 @@ import { Button } from '../ui/button'
 import { Card, CardContent } from '../ui/card'
 import EmptyWorkspace from './EmptyWorkspace'
 import RepoDialog from './RepoDialog'
+import UserRepoList from './UserRepoList'
 
-const WorkspaceBody = () => {
+export type UserRepo = {
+  id: number
+  repoId: number
+  name: string
+  fullName: string
+  private: boolean
+  htmlUrl: string
+  description: string
+  userId: number
+  language: string
+  updatedAt: string
+  defaultBranch: string
+  owner: string
+}
+
+function WorkspaceBody() {
   // const cookieStore = await cookies()
   // const token = cookieStore.get('gh_token')?.value
 
   const { userDetail } = useContext(UserDetailContext)
   const router = useRouter()
-
   const [token, setToken] = useState('')
 
+  const [userRepoList, setUserRepoList] = useState<UserRepo[]>([])
   useEffect(() => {
     GetGithubUserToken()
   }, [])
+
+  useEffect(() => {
+    userDetail && GetUserAddedRepoList()
+  }, [userDetail])
 
   const GetGithubUserToken = async () => {
     const result = await axios.get('/api/github/token')
@@ -30,6 +50,12 @@ const WorkspaceBody = () => {
   // TODO: On Add Repo click -> connect to github and add repo to db
   const OnAddRepo = async () => {
     router.push('/api/github')
+  }
+  // fetching repo from DB not github
+  const GetUserAddedRepoList = async () => {
+    const result = await axios.get('/api/user-repo?userId=' + userDetail?.id)
+    console.log(result.data)
+    setUserRepoList(result.data)
   }
   //===================
   return (
@@ -49,18 +75,22 @@ const WorkspaceBody = () => {
           {!token ? (
             <Button onClick={OnAddRepo}>Setup</Button>
           ) : (
-            <RepoDialog setRefreshPage={(refresh: boolean) => console.log(refresh)} />
+            <RepoDialog setRefreshPage={(refresh: boolean) => GetUserAddedRepoList()} />
           )}
         </div>
       </Card>
 
       {/* If no repo added show empty workspace */}
 
-      <Card className="mt-10">
-        <CardContent>
-          <EmptyWorkspace />
-        </CardContent>
-      </Card>
+      {!userRepoList ? (
+        <Card className="mt-10">
+          <CardContent>
+            <EmptyWorkspace />
+          </CardContent>
+        </Card>
+      ) : (
+        <UserRepoList repoList={userRepoList} />
+      )}
     </div>
   )
 }

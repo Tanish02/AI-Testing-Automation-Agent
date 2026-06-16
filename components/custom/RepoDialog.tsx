@@ -14,7 +14,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 
-type Repo = {
+export type Repo = {
   id: number
   name: string
   full_name: string

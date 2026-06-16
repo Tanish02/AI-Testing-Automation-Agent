@@ -28,6 +28,7 @@ export async function GET() {
     allRepos.push(...repos)
     pages++
   }
+  // console.log (allRepos[0])
   return NextResponse.json(
     allRepos.map((r) => ({
       id: r.id,
