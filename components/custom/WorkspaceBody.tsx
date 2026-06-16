@@ -7,6 +7,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { Card, CardContent } from '../ui/card'
 import EmptyWorkspace from './EmptyWorkspace'
+import RepoDialog from './RepoDialog'
 
 const WorkspaceBody = () => {
   // const cookieStore = await cookies()
@@ -39,11 +40,7 @@ const WorkspaceBody = () => {
           Remaining Credits:{userDetail?.credits}
         </h2>
       </div>
-      <Card
-        className={
-          'mt-5 flex justify-between items-center p-4 border rounded-lg '
-        }
-      >
+      <Card className={'mt-5 flex justify-between items-center p-4 border rounded-lg '}>
         <div className="flex items-center gap-5">
           <Image src={'/github.png'} alt="github" width={45} height={45} />
           <h2 className="text-lg">Connect Github & Add Repo</h2>
@@ -52,7 +49,7 @@ const WorkspaceBody = () => {
           {!token ? (
             <Button onClick={OnAddRepo}>Setup</Button>
           ) : (
-            <Button>+Add Repo</Button>
+            <RepoDialog setRefreshPage={(refresh: boolean) => console.log(refresh)} />
           )}
         </div>
       </Card>
