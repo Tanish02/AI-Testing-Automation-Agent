@@ -4,9 +4,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { CheckCircle2, ListChecks, Sparkles, TrendingUp, XCircle } from 'lucide-react'
+import { UserDetailContext } from '@/context/UserDetailContext'
+import axios from 'axios'
+import {
+  CheckCircle2,
+  ListChecks,
+  Loader2,
+  Loader2Icon,
+  Sparkles,
+  TrendingUp,
+  XCircle,
+} from 'lucide-react'
 import Image from 'next/image'
+import { useContext, useState } from 'react'
 import { Button } from '../ui/button'
+import TestCaseList from './TestCaseList'
 import { UserRepo } from './WorkspaceBody'
 
 type props = {
@@ -18,12 +30,48 @@ function UserRepoList({ repoList }: props) {
   const passedTests = 0
   const failedTests = 0
   const passRate = totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0
+
+  const { userDetail } = useContext(UserDetailContext)
+  const [loading, setLoading] = useState(false)
+  const [testCaseLoading, setTestCaseLoading] = useState(false)
+  const [testCases, setTestCases] = useState([])
+  const handleGenerateTestCases = async (repo: UserRepo) => {
+    setLoading(true)
+
+    // call Api Route to generate test cases for selected repo
+    //    console.log(`Generating Test Cases for ${repo.fullName}`)
+
+    const result = await axios.post('/api/generate-test-cases', {
+      userId: userDetail?.id,
+      repoId: repo?.id,
+      owner: repo?.owner,
+      repo: repo.name,
+      branch: repo.defaultBranch,
+    })
+    console.log('GenerateTestCases:', result.data)
+    setLoading(false)
+  }
+  //fething test cases for selected repo
+  const GetTestCases = async (repoId: number) => {
+    setTestCaseLoading(true)
+    setTestCases([])
+
+    const result = await axios.get(`/api/test-cases?repoId=${repoId}`)
+    //console.log('Fetching Test Cases for', repoId)
+    console.log(result.data)
+    setTestCases(result.data)
+    setTestCaseLoading(false)
+  }
   return (
     <div className="mt-10">
       <h2 className="my-3 font-medium">REPOSITORIES</h2>
-      {repoList.map((repo, index) => (
-        <Accordion type="single" collapsible key={index}>
-          <AccordionItem value="item-1" className="border px-5 rounded-xl">
+      <Accordion type="single" collapsible onValueChange={(value) => GetTestCases(Number(value))}>
+        {repoList.map((repo, Index) => (
+          <AccordionItem
+            key={repo.id}
+            value={repo.id.toString()}
+            className="border px-5 rounded-xl"
+          >
             <AccordionTrigger>
               <div className="flex items-center gap-5">
                 <Image src={'/github.png'} alt="github" width={30} height={30} />
@@ -67,24 +115,44 @@ function UserRepoList({ repoList }: props) {
                   />
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border rounded-xl p-4 bg-gray-50">
-                  <div>
-                    <h3 className="font-medium">Generate AI Test Cases</h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Analyze this repository and generate automated test cases using AI.
-                    </p>
-                  </div>
+                {/* loading Indecater*/}
+                {!testCaseLoading && testCases.length > 0 && <TestCaseList />}
+                {testCaseLoading ? (
+                  <h2>
+                    <Loader2Icon className="animate-spin" /> Please Wait...
+                  </h2>
+                ) : (
+                  testCases?.length == 0 && (
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border rounded-xl p-4 bg-gray-50">
+                      <div>
+                        <h3 className="font-medium">
+                          {loading ? 'Generating Test Cases :' : 'Generate AI Test Cases'}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Analyze this repository and generate automated test cases using AI.
+                        </p>
+                      </div>
 
-                  <Button className="gap-2">
-                    <Sparkles className="h-4 w-4" />
-                    Generate Test Cases
-                  </Button>
-                </div>
+                      <Button
+                        className="gap-2"
+                        disabled={loading}
+                        onClick={() => handleGenerateTestCases(repo)}
+                      >
+                        {loading ? (
+                          <Loader2 className="animate-spin" />
+                        ) : (
+                          <Sparkles className="h-4 w-4" />
+                        )}
+                        Generate Test Cases
+                      </Button>
+                    </div>
+                  )
+                )}
               </div>
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
-      ))}
+        ))}
+      </Accordion>
     </div>
   )
 }
