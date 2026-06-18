@@ -2,13 +2,13 @@
 
 ## Snapshots 📸
 
-```
+
 ![Workspace screenshot 1](snapshots/a25f1fb3-982a-430c-8882-145c1b88a1c9.png)
 
 ![Workspace screenshot 2](snapshots/Screenshot%202026-06-19%20014412.png)
 
 ![Workspace screenshot 3](snapshots/Screenshot%202026-06-19%20014440.png)
-```
+
 
 ## Technologies & Libraries
 
