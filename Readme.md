@@ -1,141 +1,195 @@
-# AI-Testing-Automation-Agent
+# 🚀 AI Testing Automation Agent
 
-## Snapshots 📸
+An AI-powered platform that automatically analyzes GitHub repositories and generates intelligent test cases using Gemini AI.
 
-<img src="snapshots/a25f1fb3-982a-430c-8882-145c1b88a1c9.png" alt="Workspace screenshot 1" width="600" />
+The goal of this project is to reduce manual testing effort by automatically understanding source code and creating meaningful test scenarios for developers and QA teams.
 
-<img src="snapshots/Screenshot%202026-06-19%20014412.png" alt="Workspace screenshot 2" width="600" />
+---
 
-<img src="snapshots/Screenshot%202026-06-19%20014440.png" alt="Workspace screenshot 3" width="600" />
+## ✨ Features
 
-## Technologies & Libraries
+### 🔐 Authentication
 
-- Language: TypeScript
-- Runtime: Node.js
-- Framework: Next.js (App Router)
-- UI: React, Tailwind CSS, Radix UI (`@radix-ui/react-accordion`, `@radix-ui/react-dialog`, `@radix-ui/react-checkbox`), `lucide-react`
-- Authentication: Clerk (`@clerk/nextjs`)
-- Database / ORM: Drizzle ORM, Neon Serverless PostgreSQL
-- API / AI: GitHub REST API, Google GenAI Gemini
-- Payments: Stripe (`stripe`, `@stripe/stripe-js`)
-- HTTP client: `axios`
-- Tooling: `eslint`, `drizzle-kit`, TypeScript, Tailwind CSS
+- Secure user authentication using Clerk
+- Protected workspace routes
+- User-specific repositories and test cases
 
-## Project Overview
+### 🔗 GitHub Integration
 
-This repository contains a TypeScript-based Next.js application that combines user authentication, GitHub repository integration, AI-generated test case generation, and Stripe payment handling. The code includes UI components, API route handlers, a database schema, and service integrations.
+- Connect GitHub account
+- Fetch repositories using GitHub OAuth
+- Select repositories directly from GitHub
 
-## Repository Structure
+### 🤖 AI Test Case Generation
 
-- `app/`
-  - `api/` — server route handlers for GitHub OAuth, repository fetching, test case generation, Stripe checkout, and webhooks
-  - `sign-in/`, `sign-up/` — Clerk sign-in and sign-up pages
-  - `workspace/` — protected workspace layout and page
-  - `provider.tsx` — client-side provider creating a user session and calling `/api/users`
-  - `layout.tsx` — global application layout with `ClerkProvider`
-  - `page.tsx` — home page rendering a Clerk `UserButton`
-- `components/custom/` — workspace-specific UI components including repo selection, repo list, test case list, and workspace body
-- `components/ui/` — reusable UI primitives (`accordion`, `badge`, `button`, `card`, `checkbox`, `dialog`, `input`)
-- `context/` — React context for user details
-- `db/`
-  - `index.ts` — Neon database connection and Drizzle ORM setup
-  - `schema.ts` — PostgreSQL table schema definitions for `users`, `repositories`, and `test_cases`
-- `lib/` — `stripe.ts` Stripe client wrapper
-- `public/` — static assets
-- `snapshots/` — saved project snapshots and screenshots
-- `drizzle.config.ts` — Drizzle CLI configuration
-- `package.json`, `tsconfig.json`, `next.config.ts` — project and build configuration
+- Analyze repository source code
+- Generate intelligent test cases using Gemini AI
+- Store generated test cases for future reference
 
-## Snapshots
+### 🗄️ Database Management
 
-The `snapshots/` folder contains saved screenshots and snapshots of the application state.
+- PostgreSQL database using Neon
+- Drizzle ORM for type-safe database operations
+- Repository and test case persistence
 
-## Features / Implementations
+### 💳 Subscription & Payments
 
-- Clerk-based authentication and protected workspace routes
-- GitHub OAuth flow and callback handling
-- GitHub repository listing via authenticated GitHub API requests
-- Saving selected GitHub repositories to a PostgreSQL database
-- Generating AI test cases from GitHub repository file content using Google Gemini
-- Persisting generated test cases in the database
-- Querying stored test cases by repository ID
-- Stripe checkout session creation endpoint
-- Stripe webhook endpoint for handling checkout events
-- Drizzle ORM schema definitions for users, repositories, and test cases
-- Workspace UI allowing repo selection, repo listing, and AI test case generation
+- Stripe Checkout integration
+- Secure payment processing
+- Webhook handling for subscription events
 
-## Setup & Requirements
+---
 
+## 🏗️ Tech Stack
+
+### Frontend
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS
+- Radix UI
+- Lucide React
+
+### Backend
+
+- Next.js API Routes
 - Node.js
-- npm
-- Environment variables expected by the code:
-  - `DATABASE_URL`
-  - `GITHUB_CLIENT_ID`
-  - `GITHUB_CLIENT_SECRET`
-  - `GITHUB_REDIRECT_URI`
-  - `GEMINI_API_KEY`
-  - `STRIPE_SECRET_KEY`
-  - `STRIPE_WEBHOOK_SECRET`
-  - `NEXT_PUBLIC_APP_URL`
+- TypeScript
 
-## Usage
+### Database
 
-1. Install dependencies:
+- Neon PostgreSQL
+- Drizzle ORM
 
-   ```bash
-   npm install
-   ```
+### Authentication
 
-2. Set required environment variables.
+- Clerk
 
-3. Run the development server:
+### AI
 
-   ```bash
-   npm run dev
-   ```
+- Google Gemini AI
 
-4. Build for production:
+### Payments
 
-   ```bash
-   npm run build
-   ```
+- Stripe
 
-5. Start the production server:
+### External APIs
 
-   ```bash
-   npm start
-   ```
+- GitHub REST API
 
-6. Database commands:
-   - Generate migration or schema files:
-     ```bash
-     npm run db:generate
-     ```
-   - Push schema changes:
-     ```bash
-     npm run db:push
-     ```
-   - Open Drizzle Studio:
-     ```bash
-     npm run db:studio
-     ```
+---
 
-## Scope & Intent
+## 📸 Screenshots
 
-This repository is an application under development. It is structured as a working app with authentication, GitHub integration, AI test generation, and payment endpoints rather than a purely learning or demonstration project.
+### Dashboard
 
-## Limitations
+![Dashboard](./snapshots/dashboard.png)
 
-- No license is specified in the repository.
-- No automated tests are present in the visible files.
-- Client code references `/api/users`, but a corresponding route is not present.
-- Several features require external service credentials and environment configuration.
-- The implementation appears incomplete in places and depends on configured external services.
+### Repository Selection
 
-## Contributing
+![Repository Selection](./snapshots/repository-selection.png)
 
-Contributions can be made by opening issues or pull requests. Review existing code before proposing changes.
+### Generated Test Cases
 
-## License
+![Generated Test Cases](./snapshots/test-cases.png)
 
-No license is specified in this repository.
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env.local` file and add:
+
+```env
+DATABASE_URL=
+
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+GITHUB_REDIRECT_URI=
+
+GEMINI_API_KEY=
+
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+NEXT_PUBLIC_APP_URL=
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+```
+
+---
+
+## 🚀 Getting Started
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run development server:
+
+```bash
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## 🗄️ Database Commands
+
+Generate schema:
+
+```bash
+npm run db:generate
+```
+
+Push schema:
+
+```bash
+npm run db:push
+```
+
+Open Drizzle Studio:
+
+```bash
+npm run db:studio
+```
+
+---
+
+## 🔄 Application Workflow
+
+1. User signs in using Clerk
+2. Connects GitHub account
+3. Selects a repository
+4. Repository files are analyzed
+5. Gemini AI generates test cases
+6. Generated test cases are stored in PostgreSQL
+7. User can review and execute generated test scenarios
+
+---
+
+## 🎯 Future Improvements
+
+- Automated test execution
+- Support for multiple AI providers
+- Test case export (PDF/Excel)
+- CI/CD integration
+- Test coverage analysis
+- Team collaboration features
+- Repository scanning optimization
+
+---
+
+## 👨‍💻 Author
+
+Tanish Sharma
+
+Built to explore the intersection of AI, software testing, and developer productivity.
