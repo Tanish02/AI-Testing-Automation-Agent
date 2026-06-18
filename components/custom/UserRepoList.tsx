@@ -25,16 +25,38 @@ type props = {
   repoList: UserRepo[]
 }
 
+export type TestCase = {
+  id: number
+  title: string
+  description: string
+  type: string
+  repoId: number
+  targetFiles: string[]
+  expectedResult: string
+  repoName: string
+  repoOwner: string
+  targetRoute: string
+}
+
+type StatusData = {
+  totalTests: number
+  passedTests: number
+  failedTests: number
+  passRate: number
+}
+
 function UserRepoList({ repoList }: props) {
-  const totalTests = 0
-  const passedTests = 0
-  const failedTests = 0
-  const passRate = totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0
+  const [statusData, setStatusData] = useState<StatusData>({
+    totalTests: 0,
+    passedTests: 0,
+    failedTests: 0,
+    passRate: 0,
+  })
 
   const { userDetail } = useContext(UserDetailContext)
   const [loading, setLoading] = useState(false)
   const [testCaseLoading, setTestCaseLoading] = useState(false)
-  const [testCases, setTestCases] = useState([])
+  const [testCases, setTestCases] = useState<TestCase[]>([])
   const handleGenerateTestCases = async (repo: UserRepo) => {
     setLoading(true)
 
@@ -59,6 +81,14 @@ function UserRepoList({ repoList }: props) {
     const result = await axios.get(`/api/test-cases?repoId=${repoId}`)
     //console.log('Fetching Test Cases for', repoId)
     console.log(result.data)
+
+    setStatusData({
+      totalTests: result.data.length,
+      passedTests: 0,
+      failedTests: 0,
+      passRate: 0,
+    })
+
     setTestCases(result.data)
     setTestCaseLoading(false)
   }
@@ -88,37 +118,42 @@ function UserRepoList({ repoList }: props) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <StatusCard
                     title="Total Tests"
-                    value={totalTests}
+                    value={statusData?.totalTests}
                     icon={<ListChecks className="h-5 w-5 text-blue-600" />}
                     bgColor="bg-blue-50"
                   />
 
                   <StatusCard
                     title="Passed"
-                    value={passedTests}
+                    value={statusData?.passedTests}
                     icon={<CheckCircle2 className="h-5 w-5 text-green-600" />}
                     bgColor="bg-green-50"
                   />
 
                   <StatusCard
                     title="Failed"
-                    value={failedTests}
+                    value={statusData?.failedTests}
                     icon={<XCircle className="h-5 w-5 text-red-600" />}
                     bgColor="bg-red-50"
                   />
 
                   <StatusCard
                     title="Pass Rate"
-                    value={`${passRate}%`}
+                    value={`${statusData?.passRate}%`}
                     icon={<TrendingUp className="h-5 w-5 text-purple-600" />}
                     bgColor="bg-purple-50"
                   />
                 </div>
 
                 {/* loading Indecater*/}
-                {!testCaseLoading && testCases.length > 0 && <TestCaseList />}
+                {!testCaseLoading && testCases.length > 0 && (
+                  <TestCaseList
+                    testCases={testCases}
+                    onReload={(repoId: number) => GetTestCases(repoId)}
+                  />
+                )}
                 {testCaseLoading ? (
-                  <h2>
+                  <h2 className="flex gap-3 items-center">
                     <Loader2Icon className="animate-spin" /> Please Wait...
                   </h2>
                 ) : (
